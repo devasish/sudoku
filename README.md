@@ -1,0 +1,2 @@
+# sudoku
+SuDoKu - Generation algo
