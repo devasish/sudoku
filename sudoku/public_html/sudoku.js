@@ -12,13 +12,15 @@ $(document).ready(function() {
         var curCell = [0,0];
         
         init();
-        
-        while(left.length > 0) {
-            build();
-        }
+        build();
+//        while(left.length > 0) {
+//            build();
+//            //output();
+//        }
         output();
         
         function build() {
+            console.log('called');
             var c = chooseCell();
             var n = 0;
             var success = false;
@@ -27,6 +29,7 @@ $(document).ready(function() {
             
             for (var i = 0; i < size; i++) {
                 n = xDigits[i];
+                console.log(n);
                 if (!conflict(c.c_2d, n)) {
                     done.push(c.c_1d);
                     left.splice(c.c_1d, 1);
@@ -37,21 +40,25 @@ $(document).ready(function() {
             }
             
             if (success === false) {
-                console.log('conflict');
                 backtrack();
-//                done.push(0);
-//                left.splice(c.c_1d, 1);
+            }
+            
+            console.log( ' ->'+ left.length);
+            if (left.length > 0) {
+                build();
             }
         }
         
-        function conflict(c_2d, n) {
+        function conflict(c_2d, n_) {
             var rowFlag = false;
             var colFlag = false;
+            console.log(done.length);
+            console.log(left.length);
             console.log(c_2d);
             console.log(cells[c_2d[0]]);
             var rowWise = function() {
-                for (var i = 0; i < size; i++) {
-                    if (cells[i][c_2d[1]] == n) {
+                for (var j = 0; j < size; j++) {
+                    if (cells[j][c_2d[1]] == n_) {
                         rowFlag = true;
                         break;
                     }
@@ -59,8 +66,8 @@ $(document).ready(function() {
             }
             
             var colWise = function() {
-                for (var i = 0; i < size; i++) {
-                    if (cells[c_2d[0]][i] == n) {
+                for (var j = 0; j < size; j++) {
+                    if (cells[c_2d[0]][j] == n_) {
                         colFlag = true;
                         break;
                     }
@@ -74,9 +81,19 @@ $(document).ready(function() {
         
         function backtrack() {
             var doneLastCell = done[done.length - 1];
-            //ignore[doneLastCell] = n;
+            
             left.push(doneLastCell);
             done.splice((done.length - 1), 1);
+            
+            var twod = get2DIndex(doneLastCell);
+            cells[twod[0]][twod[1]] = 0;
+            
+//            console.log('=====================');
+//            console.log(doneLastCell);
+//            console.log(twod);
+//            console.log(left.length);
+//            console.log(done.length);
+            
         }
         
         function init() {
@@ -110,6 +127,7 @@ $(document).ready(function() {
         }
         
         function output() {
+            console.log('output');
             this_.html('');
             for (var i = 0; i < size; i++) {
                 var row = '';
@@ -161,5 +179,3 @@ $(document).ready(function() {
         }
     }
 });
-
-
