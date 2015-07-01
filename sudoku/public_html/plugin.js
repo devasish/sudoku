@@ -2,7 +2,7 @@ var STOP_S = 0;
 $(document).ready(function() {
     $.fn.sudoku = function() {
         var this_ = $(this);
-        var size = 9;
+        var size = 5;
         var minIndex = 0;
         var maxIndex = size - 1 + minIndex;
         var xDigits = initNumbers(size);
@@ -54,6 +54,7 @@ $(document).ready(function() {
                         left.splice(left.indexOf(c.c_1d), 1);
                         cells[c.c_2d[0]][c.c_2d[1]] = n;
                         success = true;
+                        break;
                     } else {
                         avail[c.c_1d].push(n);
                     }
@@ -108,7 +109,18 @@ $(document).ready(function() {
                 stack.push(conflictedWithCell);
             }
             else {
-                stack.push(done[done.length - 1]);
+                var ttt = 1;
+                while(true) {
+                    if (stack.indexOf(done[done.length - ttt]) > -1) {
+                        
+                    } else {
+                        stack.push(done[done.length - ttt]);
+                        break;
+                    }
+                    
+                    ttt++;
+                }
+                
             } 
                 
             //console.log('Conflicted With Cell - ' + conflictedWithCell);
@@ -215,14 +227,20 @@ $(document).ready(function() {
         }
         
         function get1DIndex(twoDIndex) {
-            
+            return (size * twoDIndex[0] + twoDIndex[1]);
         }
         
         function chooseCell() {
             var c_1d = 0;
-            if (stack.length > 0) {
-                c_1d = stack[(stack.length - 1)];
-                stack.pop();
+            var lastIndex = stack.length - 1;
+            console.info(lastIndex);
+            if (lastIndex >= 0) {
+                c_1d = stack[lastIndex];
+                console.log(stack);
+                //stack.splice(lastIndex, 1);
+                stack.splice(lastIndex, 1);
+                console.log('popped');
+                console.log(stack);
             } else {
                 c_1d = left[rand(0, (left.length - 1))];
             }
